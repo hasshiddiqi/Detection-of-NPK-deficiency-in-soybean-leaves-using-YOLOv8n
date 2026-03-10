@@ -43,7 +43,7 @@ if uploaded_file is not None:
 
     with col1:
         st.subheader("Gambar Asli")
-        st.image(image, use_container_width=True)
+        st.image(image, use_column_width=True)
 
     with col2:
         st.subheader("Hasil Deteksi")
@@ -73,4 +73,5 @@ if uploaded_file is not None:
     else:
 
         st.write("Tidak ada objek yang terdeteksi.")
+
 

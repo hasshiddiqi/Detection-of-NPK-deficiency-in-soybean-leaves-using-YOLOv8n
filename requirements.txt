@@ -1,9 +1,4 @@
-opencv-python-headless==4.8.0.74
-streamlit
-pandas
-numpy
+opencv-python-headless
 ultralytics
+streamlit
 pillow
-torch
-torchvision
-

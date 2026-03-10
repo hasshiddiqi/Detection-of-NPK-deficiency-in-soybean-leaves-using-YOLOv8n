@@ -13,7 +13,7 @@ st.write("Selamat datang di project pertama saya! Silakan unggah gambar untuk di
 # Pastikan file 'best.pt' ada di folder yang sama dengan file app.py ini
 @st.cache_resource # Gunakan cache agar model tidak reload setiap kali user klik tombol
 def load_model():
-    model = YOLO("C:\\Users\\Pongo\\Documents\\Kuliah\\Tugas Akhir\\Percobaan Streamlit\\best.pt")
+    model = YOLO("best.pt")
     return model
 
 try:
@@ -66,4 +66,5 @@ if uploaded_file is not None:
             prob = float(box.conf[0])
             st.write(f"- Menemukan **{label}** dengan tingkat keyakinan **{prob:.2f}**")
     else:
+
         st.write("Tidak ada objek yang terdeteksi.")

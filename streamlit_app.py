@@ -59,7 +59,7 @@ if uploaded_file is not None:
             res_plotted = results[0].plot()
             
             # Tampilkan hasil
-            st.image(res_plotted, channels="BGR", use_container_width=True)
+            st.image(res_plotted, channels="BGR", use_column_width=True)
 
     # 5. Tampilkan Informasi Tambahan
     st.divider()
@@ -73,5 +73,6 @@ if uploaded_file is not None:
     else:
 
         st.write("Tidak ada objek yang terdeteksi.")
+
 
 

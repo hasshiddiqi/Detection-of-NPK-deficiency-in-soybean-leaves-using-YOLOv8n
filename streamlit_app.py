@@ -2,6 +2,7 @@ import streamlit as st
 from ultralytics import YOLO
 from PIL import Image
 import numpy as np
+import torch
 
 # 1. Konfigurasi Halaman
 st.set_page_config(page_title="YOLO Detection App", layout="wide")
@@ -11,8 +12,12 @@ st.write("Selamat datang di project pertama saya! Silakan unggah gambar untuk di
 
 # 2. Load Model
 # Pastikan file 'best.pt' ada di folder yang sama dengan file app.py ini
-@st.cache_resource # Gunakan cache agar model tidak reload setiap kali user klik tombol
+@st.cache_resource
 def load_model():
+    # 1. Daftarkan kelas ultralytics agar dianggap aman oleh PyTorch
+    from ultralytics.nn.tasks import DetectionModel
+    torch.serialization.add_safe_globals([DetectionModel])
+    # 2. Muat model seperti biasa
     model = YOLO("best.pt")
     return model
 
@@ -24,7 +29,7 @@ except Exception as e:
 
 # 3. Sidebar untuk Pengaturan
 st.sidebar.header("Pengaturan Model")
-conf_threshold = st.sidebar.slider("Confidence Threshold", 0.0, 1.0, 0.25)
+conf_threshold = st.sidebar.slider("Confidence Threshold", 0.0, 1.0, 0.5)
 
 # 4. Upload Gambar
 uploaded_file = st.file_uploader("Pilih gambar...", type=["jpg", "jpeg", "png"])
@@ -68,3 +73,4 @@ if uploaded_file is not None:
     else:
 
         st.write("Tidak ada objek yang terdeteksi.")
+

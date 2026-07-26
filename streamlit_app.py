@@ -58,22 +58,21 @@ div[data-testid="stTabs"] div[data-baseweb="tab-highlight"] {
 """, unsafe_allow_html=True)
 
 
-st.markdown("""
-### 🌱 Apa itu SAVIS?
-SAVIS membantu Anda memeriksa kesehatan daun kedelai hanya dengan foto.
-
-**Cara pakai:**
-1. 📷 Ambil atau unggah foto daun kedelai yang jelas
-2. 🔍 Sistem akan otomatis memeriksa tanda kekurangan unsur hara
-3. 💡 Anda akan mendapat penjelasan dan saran pupuk yang sesuai
-
-Tidak perlu keahlian khusus — cukup foto, dan SAVIS membantu Anda memahami kondisi tanaman.
-""")
-st.divider()
-
-
 tab1, tab2, tab3 = st.tabs(["Prediksi", "Karakteristik Visual Defisiensi", "Tentang Model"])
 with tab1:
+    st.markdown("""
+    ### 🌱 Apa itu SAVIS?
+    SAVIS membantu Anda memeriksa kesehatan daun kedelai hanya dengan foto.
+
+    **Cara pakai:**
+    1. 📷 Ambil atau unggah foto daun kedelai yang jelas
+    2. 🔍 Sistem akan otomatis memeriksa tanda kekurangan unsur hara
+    3. 💡 Anda akan mendapat penjelasan dan saran pupuk yang sesuai
+
+    Tidak perlu keahlian khusus — cukup foto, dan SAVIS membantu Anda memahami kondisi tanaman.
+    """)
+    st.divider()
+        
     #Kotak unggah foto
     st.markdown("""
     <style>
@@ -122,9 +121,7 @@ with tab1:
         image = Image.open(image_source).convert("RGB")
         # Buat dua kolom untuk membandingkan Original vs Hasil
         col1, col2 = st.columns(2)
-        #Buat slide ambang kepercayaan
-        conf_threshold = st.slider("Ambang kepercayaan", 0.0, 1.0, 0.838)
-
+        
         with col1:
             st.subheader("Gambar Asli")
             st.image(image, use_container_width=True)
@@ -136,7 +133,7 @@ with tab1:
                 # Convert PIL image ke format yang dimengerti YOLO (numpy array)
                 img_array = np.array(image)
                 img_array = cv2.cvtColor(img_array, cv2.COLOR_RGB2BGR)  # konversi ke BGR
-                results = model.predict(source=img_array, conf=conf_threshold, imgsz=896, task='detect')
+                results = model.predict(source=img_array, conf=0.90, imgsz=896, task='detect')
                 # Ambil gambar hasil plot (bounding boxes)
                 # results[0].plot() mengembalikan array gambar dengan kotak deteksi
                 label_translation = {
@@ -162,15 +159,15 @@ with tab1:
     },
     "N Deficiency": {
         "keterangan": "⚠️ Tanaman Anda mengalami kekurangan unsur **Nitrogen (N)**.",
-        "solusi": "Gunakan pupuk mengandung Nitrogen seperti Urea atau ZA. Konsultasikan dosis dan waktu aplikasi yang tepat dengan penyuluh pertanian setempat, karena kebutuhan bisa berbeda tergantung kondisi lahan."
+        "solusi": "Gunakan pupuk mengandung nitrogen seperti Urea atau ZA. Konsultasikan dosis dan waktu aplikasi yang tepat dengan penyuluh pertanian setempat, karena kebutuhan bisa berbeda tergantung kondisi lahan."
     },
     "P Deficiency": {
         "keterangan": "⚠️ Tanaman Anda mengalami kekurangan unsur **Fosfor (P)**.",
-        "solusi": "Gunakan pupuk mengandung Fosfor seperti SP-36 atau TSP. Konsultasikan dosis dan waktu aplikasi yang tepat dengan penyuluh pertanian setempat, karena kebutuhan bisa berbeda tergantung kondisi lahan."
+        "solusi": "Gunakan pupuk mengandung fosfor seperti SP-36 atau TSP. Konsultasikan dosis dan waktu aplikasi yang tepat dengan penyuluh pertanian setempat, karena kebutuhan bisa berbeda tergantung kondisi lahan."
     },
     "K Deficiency": {
         "keterangan": "⚠️ Tanaman Anda mengalami kekurangan unsur **Kalium (K)**.",
-        "solusi": "Gunakan pupuk mengandung Kalium seperti KCl atau ZK. Konsultasikan dosis dan waktu aplikasi yang tepat dengan penyuluh pertanian setempat, karena kebutuhan bisa berbeda tergantung kondisi lahan."
+        "solusi": "Gunakan pupuk mengandung kalium seperti KCl atau ZK. Konsultasikan dosis dan waktu aplikasi yang tepat dengan penyuluh pertanian setempat, karena kebutuhan bisa berbeda tergantung kondisi lahan."
     },
 }
 
@@ -193,16 +190,6 @@ with tab1:
                     st.warning(info["keterangan"])
                     st.write(f"💡 **Solusi:** {info['solusi']}")
                     st.write("")
-
-            st.divider()
-            st.subheader("Detail Deteksi")
-            for box in results[0].boxes:
-                class_id = int(box.cls[0])
-                label = model.names[class_id]
-                prob = float(box.conf[0])
-                st.write(f"- Menemukan daun **{label_translation.get(label, label)}** dengan tingkat keyakinan **{prob:.2f}**")
-            else:
-                st.write("Tidak ada objek yang terdeteksi.")
 
 with tab2:
     st.header("Karakteristik Visual Daun Hara Tercukupi", divider="blue")
